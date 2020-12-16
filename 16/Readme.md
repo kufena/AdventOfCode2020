@@ -15,24 +15,25 @@ Each ticket is represented by a single line of comma-separated values. The value
     | ??: 301  ??: 302             ???????: 303      ??????? |
     | ??: 401  ??: 402           ???? ????: 403    ????????? |
     '--------------------------------------------------------'
+
 Here, ? represents text in a language you don't understand. This ticket might be represented as 101,102,103,104,301,302,303,401,402,403; of course, the actual train tickets you're looking at are much more complicated. In any case, you've extracted just the numbers in such a way that the first number is always the same specific field, the second number is always a different specific field, and so on - you just don't know what each position actually means!
 
 Start by determining which tickets are completely invalid; these are tickets that contain values which aren't valid for any field. Ignore your ticket for now.
 
 For example, suppose you have the following notes:
 
-class: 1-3 or 5-7
-row: 6-11 or 33-44
-seat: 13-40 or 45-50
-
-your ticket:
-7,1,14
-
-nearby tickets:
-7,3,47
-40,4,50
-55,2,20
-38,6,12
+    class: 1-3 or 5-7
+    row: 6-11 or 33-44
+    seat: 13-40 or 45-50
+    
+    your ticket:
+    7,1,14
+    
+    nearby tickets:
+    7,3,47
+    40,4,50
+    55,2,20
+    38,6,12
 
 It doesn't matter which position corresponds to which field; you can identify invalid nearby tickets by considering only whether tickets contain values that are not valid for any field. In this example, the values on the first nearby ticket are all valid for at least one field. This is not true of the other three nearby tickets: the values 4, 55, and 12 are are not valid for any field. Adding together all of the invalid values produces your ticket scanning error rate: 4 + 55 + 12 = 71.
 
@@ -48,17 +49,17 @@ Using the valid ranges for each field, determine what order the fields appear on
 
 For example, suppose you have the following notes:
 
-class: 0-1 or 4-19
-row: 0-5 or 8-19
-seat: 0-13 or 16-19
-
-your ticket:
-11,12,13
-
-nearby tickets:
-3,9,18
-15,1,5
-5,14,9
+    class: 0-1 or 4-19
+    row: 0-5 or 8-19
+    seat: 0-13 or 16-19
+    
+    your ticket:
+    11,12,13
+    
+    nearby tickets:
+    3,9,18
+    15,1,5
+    5,14,9
 
 Based on the nearby tickets in the above example, the first position must be row, the second position must be class, and the third position must be seat; you can conclude that in your ticket, class is 12, row is 11, and seat is 13.
 
