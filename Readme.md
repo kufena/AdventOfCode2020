@@ -1,7 +1,7 @@
 # Advent of Code 2020 Solutions.
 
 These are my implementations in C# for the various advent of code
-exercises.
+exercises.  Actually the first six days were completed in python.
 
 The code is a bit ragged - most take the input in a file, passing the
 file name as an argument.  Some don't.  There are no unit tests, but
