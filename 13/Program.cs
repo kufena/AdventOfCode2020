@@ -16,23 +16,35 @@ namespace _13
             part2c(args);
         }
 
+        // This version uses the straight remainder theorem, and because of the small
+        // numbers involved, seems to complete in seconds rather than hours!
         public static void part2c(string[] args) {
+
+            // let's read the file first.
             var f = File.OpenRead(args[0]);
             var sr = new StreamReader(f);
             long timet = Int64.Parse(sr.ReadLine());
             string busses = sr.ReadLine();
             Console.WriteLine(busses);
 
+            // the buses as individual strings.
             var splits = busses.Split(',');
+
+            // count them first.
             int counter = 0;
             foreach(var s in splits) {
                 if (s != "x")
                     counter++;
             }
 
+            // ok, what's what here?
+            // n is the buses, a are the remainders.
             int[] a = new int[counter];
             int[] n = new int[counter];
 
+            // we have an arrival time at the bus stop, which is timet
+            // each bus has a position in the ranking, 0, 1, 2 etc.
+            // we give each bus a remainder of bus id minus its position.
             int c2 = 0;
             int c3 = 0;
             long N = 1;
@@ -63,6 +75,12 @@ namespace _13
             }
             */
 
+            // Here, we know N which is the product of all the bus numbers.
+            // We want the Ni, which is N/n[i] - or the product of all the other bus ids.
+            // a[i] is the bus id.
+            // val is the modulo inverse of Ni and the bus id.  ie Ni * val is congruent to 1 (mod busid)
+            // The we produce our modulus * Ni * val or similar, and add to our running total.
+            // The plus one is because we eventually take the whole value mod N and sometimes we have a 0 modulus.
             long total = 0;
             for(int i = 0; i < counter; i++) {
                 long Ni = (long) (N / n[i]);
@@ -76,6 +94,9 @@ namespace _13
             Console.WriteLine($"Output is {total-1} or {shortsum} mod {N}");
         }
 
+        // our way of finding the inverse is to mod the Ni first, then take pot shots
+        // at a guess to find a p s.t p*Ni is 1 (mod a).
+        // The inverse is the p, which we return.
         public static long inverse(long Ni, long a) {
             long p;
             Math.DivRem(Ni, a, out p);
