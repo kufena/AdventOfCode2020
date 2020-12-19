@@ -9,8 +9,15 @@ namespace _19
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
             var f = File.OpenRead(args[0]);
             StreamReader sr = new StreamReader(f);
+
+            // UNCOMMENT TO GENERATE RULES FOR THE 42/32 THING.
+            //NewRules.CalculateNewRules(sr);
+
+            //string rts = Console.ReadLine();
+            //if (rts == "y") return;
 
             Dictionary<int,string> prerules = new Dictionary<int, string>();
             SortedDictionary<int,string> bprerules = new SortedDictionary<int, string>();
@@ -24,6 +31,7 @@ namespace _19
                 bprerules.Add(n, splits[1].Trim());
             }
 
+            // outputs the rules in sorted order.  More convenient.
             foreach(var (n,s) in bprerules) Console.WriteLine($"{n}: {s}");
             
             Console.ReadLine();
