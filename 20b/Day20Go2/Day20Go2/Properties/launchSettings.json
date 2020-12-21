@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Day20Go2": {
+      "commandName": "Project",
+      "commandLineArgs": "e:/work/adventofcode/20b/Day20Go2/Day20Go2/test.txt"
+    }
+  }
+}
