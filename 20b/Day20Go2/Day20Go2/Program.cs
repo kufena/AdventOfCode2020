@@ -11,7 +11,30 @@ namespace Day20Go2
         {
 
             Console.WriteLine("Hello World!");
+
+            var g = File.OpenRead(args[1]);
+            StreamReader tr = new StreamReader(g);
+            // for the monster.
+            List<(int, int)> monster = new List<(int, int)>();
+            int qwerty = 0;
             string line;
+            int monsterlength = 0;
+            while((line = tr.ReadLine()) != null)
+            {
+                if (line.Length > monsterlength)
+                    monsterlength = line.Length;
+
+                for(int i = 0; i < line.Length; i++)
+                {
+                    if (line[i] == '#')
+                        monster.Add((i, qwerty));
+                }
+                qwerty += 1;
+            }
+            int monsterlines = qwerty;
+
+            // read and parse file.
+            line = "";
             var f = File.OpenRead(args[0]);
             StreamReader sr = new StreamReader(f);
             int tilesize = 10;
@@ -161,19 +184,44 @@ namespace Day20Go2
                     string[] block = new string[0];
                     for(int i = 0; i < gridsize; i++)
                     {
-                        var rowblock = new string[tilesize]; // -2]; // remember, we're stripping edges!
-                        for (int k = 0; k < gridsize; k++) rowblock[k] = "";
+                        var rowblock = new string[tilesize-2]; // remember, we're stripping edges!
+                        for (int k = 0; k < tilesize-2; k++) rowblock[k] = "";
                         for(int j = 0; j < gridsize; j++)
                         {
                             var (n, st) = grid[j,i];
-                            var ijblock = images[n.num].states[st.id].rows; // stripEdges();
+                            var ijblock = images[n.num].states[st.id].stripEdges();
                             rowblock = TileState.concat(rowblock, ijblock);
                         }
                         block = TileState.vertstack(block, rowblock);
                     }
 
+                    int hashcount = 0;
                     for (int i = 0; i < block.Length; i++)
+                    {
+                        for (int j = 0; j < block[i].Length; j++)
+                            if (block[i][j] == '#') hashcount += 1;
+
                         WriteLine("     " + block[i]);
+                    }
+                    // we know how many hashes there are, lets count the monsters.
+                    int monstercount = 0;
+                    for(int i = 0; i < block.Length-monsterlines; i++)
+                    {
+                        for(int j = 0; j < block[i].Length - monsterlength; j++)
+                        {
+                            int ppp = 0;
+                            foreach(var (x,y) in monster)
+                            {
+                                if (block[i + y][j+x] == '#')
+                                    ppp += 1;
+                            }
+                            if (ppp == monster.Count)
+                                monstercount += 1;
+                        }
+                    }
+                    int rty = monstercount * monster.Count;
+                    Console.WriteLine($"Found {monstercount} monsters, so {hashcount} hashes to start, minus {rty} removed, leaving {hashcount - rty}");
+
                 }
 
                 ReadLine();

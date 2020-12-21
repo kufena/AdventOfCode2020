@@ -48,11 +48,19 @@ namespace Day20Go2
             var result = new List<(FlipState, FlipState)>();
 
             //if (state.bottom == bottom) result.Add( (FlipState.Bottom, FlipState.Bottom));
-            if (state.bottom == top) result.Add((FlipState.Bottom, FlipState.Top));
+            if (state.bottom == top)
+            {
+                //Console.WriteLine($"{state.bottom} == {top}");
+                result.Add((FlipState.Top, FlipState.Bottom));
+            }
             //if (state.bottom == left) result.Add((FlipState.Bottom, FlipState.Left));
             //if (state.bottom == right) result.Add((FlipState.Bottom, FlipState.Right));
 
-            if (state.top == bottom) result.Add((FlipState.Top, FlipState.Bottom));
+            if (state.top == bottom)
+            {
+                result.Add((FlipState.Bottom, FlipState.Top));
+                //Console.WriteLine($"{state.top} == {bottom}");
+            }
             //if (state.top == top) result.Add((FlipState.Top, FlipState.Top));
             //if (state.top == left) result.Add((FlipState.Top, FlipState.Left));
             //if (state.top == right) result.Add((FlipState.Top, FlipState.Right));
@@ -60,11 +68,18 @@ namespace Day20Go2
             //if (state.left == bottom) result.Add((FlipState.Left, FlipState.Bottom));
             //if (state.left == top) result.Add((FlipState.Left, FlipState.Top));
             //if (state.left == left) result.Add((FlipState.Left, FlipState.Left));
-            if (state.left == right) result.Add((FlipState.Left, FlipState.Right));
-
+            if (state.left == right)
+            {
+                result.Add((FlipState.Right, FlipState.Left));
+                //Console.WriteLine($"{state.left} == {right}");
+            }
             //if (state.right == bottom) result.Add((FlipState.Right, FlipState.Bottom));
             //if (state.right == top) result.Add((FlipState.Right, FlipState.Top));
-            if (state.right == left) result.Add((FlipState.Right, FlipState.Left));
+            if (state.right == left)
+            {
+                result.Add((FlipState.Left, FlipState.Right));
+                //Console.WriteLine($"{state.right} == {left}");
+            }
             //if (state.right == right) result.Add((FlipState.Right, FlipState.Right));
 
             return result;
