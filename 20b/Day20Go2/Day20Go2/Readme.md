@@ -1,3 +1,41 @@
+# --- This is a solution for the Second part of Day 20 ---
+
+See the sub-directory 20 for the first part.
+
+The idea behind this solution is that each Tile is actually a fluid combination of
+eight different orientations of what we read from the file, due to the various
+rotations and flips.  There are 16 combinations but only 8 unique ones.
+
+This is good as for each Tile State (state) we keep the top, bottom, left and
+right sides, and the correctly orientated text of the tile.  We can now match
+Tile/Tile State pairs to find neighbours.  We can rule out illegal states (we
+look for states that match top to bottom, left to right, right to left and
+bottom to top only) and store the top, bottom, left and right matches.
+
+It turns out that each Tile and Tile State has only one match for each position,
+which makes life easier (I started out with a list of matches, but the data
+suggests there's each edge matches only one other tile.  Convenient.  If this
+wasn't the case, for each duplicate edge, you could easily just create a
+new Tile/Tile State pairing.)
+
+Now, corners are those Tile/Tile State pairs with two matches,
+and the top left hand corners are those that have a right to left and a
+bottom to top pairing.  Each corner can become a top left corner if you
+think of rotating and positioning tiles in those way.
+
+For each top left corner we find a tiling grid to make a complete square.
+This is true for each corner, it seems.
+
+Once we have grids, it is easy to strip the edges of each tile and
+concatenate them so that they form a block of text - and array of
+long strings.
+
+We can now search point by point for monsters.  A monster is a list of points
+which must be '#' characters.  We do this for each grid, but 
+in fact, it turns out that only
+one orientation of the tiles matches any monsters, and we use the result
+of that one in the challenge.
+
 # --- Day 20: Jurassic Jigsaw ---
 
 The high-speed train leaves the forest and quickly carries you south. You can even see a desert in the distance! Since you have some spare time, you might as well see if there was anything interesting in the image the Mythical Information Bureau satellite captured.

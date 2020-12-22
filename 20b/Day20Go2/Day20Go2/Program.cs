@@ -12,6 +12,9 @@ namespace Day20Go2
 
             Console.WriteLine("Hello World!");
 
+            // Read the monster file - produce a list of relative
+            // points to look for '#' characters.
+
             var g = File.OpenRead(args[1]);
             StreamReader tr = new StreamReader(g);
             // for the monster.
@@ -33,7 +36,8 @@ namespace Day20Go2
             }
             int monsterlines = qwerty;
 
-            // read and parse file.
+            // read and parse input file.
+
             line = "";
             var f = File.OpenRead(args[0]);
             StreamReader sr = new StreamReader(f);
@@ -65,7 +69,9 @@ namespace Day20Go2
             
             int gridsize = (int) Math.Sqrt(images.Count);
 
+            //
             // So now we have tiles and all their states, we need to find matches i guess.
+
             Dictionary<(Tile, TileState), TileStateMatchList> scores = new Dictionary<(Tile, TileState), TileStateMatchList>();
 
             foreach (var (n1, k1) in images)
@@ -81,6 +87,10 @@ namespace Day20Go2
                             foreach (var (v2, state2) in k2.states)
                             {
                                 var result = state1.matchState(state2);
+                                
+                                // CONVENIENT ASSUMPTION.
+                                // In fact we find the input only ever has one result, which makes life easier.
+                                // Otherwise we'd have to dedupe and create new Tile/State pairings.
                                 if (result.Count == 1)
                                     statematch.AddTarget(k2, state2, result[0]);
                             }
@@ -88,6 +98,9 @@ namespace Day20Go2
                     }
                 }
             }
+
+            //
+            // We want the corners next = those with two matches.
 
             List<(Tile, TileState)> corners = new List<(Tile, TileState)>();
 
@@ -107,6 +120,10 @@ namespace Day20Go2
 
             WriteLine();
 
+            //
+            // Now search for Tile/TileState pairs that have left-right and bottom-top matches, which make
+            // them top left hand corners of the grid.
+
             List<(Tile, TileState)> topleftcorners = new List<(Tile, TileState)>();
             foreach (var (t, s) in corners)
             {
@@ -117,9 +134,16 @@ namespace Day20Go2
                 }
             }
 
+            //
+            // Create a grid for each top left corner then search for monsters.
             foreach(var (t,s) in topleftcorners)
             { 
                 WriteLine($"corner potential -- {t.num} {s.id}");
+
+                //
+                // We start at the top left and keep going looking for left to right matches,
+                // then when we get to the end we go down to the next layer and start on the
+                // next line of the grid.
 
                 Dictionary<Tile, TileState> seen = new Dictionary<Tile, TileState>();
                 var store = (t, s);
@@ -179,8 +203,16 @@ namespace Day20Go2
                     }
                 }
 
+                //
+                // If we haven't set an illegal flag (we never do!) then build a block of text and
+                // search for monsters.
+
                 if (!illegalcol && !illegalrow)
                 {
+                    //
+                    // Build the block of text, stripping edges, concatening and stacking.
+                    // We don't need to do the rotating/flipping as each TileState already has the
+                    // text of it's block as required.
                     string[] block = new string[0];
                     for(int i = 0; i < gridsize; i++)
                     {
@@ -195,6 +227,13 @@ namespace Day20Go2
                         block = TileState.vertstack(block, rowblock);
                     }
 
+                    //
+                    // Count hashes in the block of text.  The number of untouch hashes as the end
+                    // will be the number of monsters found times the number of points in the monster,
+                    // subtracted from the number of hashes we find now.
+                    // Note this won't work, potentially for monsters that have vertical symmetry as
+                    // two monsters may overlap.  Similarly for vertical symmetry I guess.  Haven't
+                    // thought this through but I know what I mean.
                     int hashcount = 0;
                     for (int i = 0; i < block.Length; i++)
                     {
@@ -203,6 +242,8 @@ namespace Day20Go2
 
                         WriteLine("     " + block[i]);
                     }
+
+                    //
                     // we know how many hashes there are, lets count the monsters.
                     int monstercount = 0;
                     for(int i = 0; i < block.Length-monsterlines; i++)
@@ -219,6 +260,9 @@ namespace Day20Go2
                                 monstercount += 1;
                         }
                     }
+
+                    //
+                    // Result for this grid is calculated and output.
                     int rty = monstercount * monster.Count;
                     Console.WriteLine($"Found {monstercount} monsters, so {hashcount} hashes to start, minus {rty} removed, leaving {hashcount - rty}");
 
@@ -227,6 +271,7 @@ namespace Day20Go2
                 ReadLine();
             }
 
+            // Done!
         }
     }
 }
