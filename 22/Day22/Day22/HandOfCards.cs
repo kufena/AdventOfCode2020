@@ -25,6 +25,10 @@ namespace Day22
             for (int i = 0; i < num; i++) cards.Add(hand[i]); // copy n numbers.
         }
 
+
+        public HandOfCards(HandOfCards hand, int num) : this(hand.cards, num)
+        { }
+
         public HandOfCards Copy()
         {
             return new HandOfCards(cards);
@@ -45,6 +49,23 @@ namespace Day22
         public void AddToBottom(int c)
         {
             cards.Add(c);
+        }
+
+        // Let's make this clear it's an extensional equality on the order and
+        // contents of the cards, and not the Equals provided by any sub/base class.
+        public bool ExtEquals(HandOfCards hoc)
+        {
+            if (hoc.cards.Count == cards.Count)
+            {
+                for(int i = 0; i < cards.Count; i++)
+                {
+                    if ((hoc.cards[i]) != (cards[i]))
+                        return false;
+                }
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

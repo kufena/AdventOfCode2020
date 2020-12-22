@@ -53,44 +53,10 @@ namespace Day22
             if (hands.Count != 2) throw new Exception("Too many hands or too few!");
             HandOfCards player1 = hands[1];
             HandOfCards player2 = hands[2];
-            Part1GamePlay(player1, player2);
-        }
 
-        private static void Part1GamePlay(HandOfCards player1, HandOfCards player2)
-        {
-            // Playing the game.
-            Console.WriteLine("Let's Play!");
-            while (player1.Count > 0 && player2.Count > 0)
-            {
-                int p1card = player1.PopTop();
-                int p2card = player2.PopTop();
-
-                if (p1card > p2card)
-                {
-                    // p1 wins, gets both cards, highest first.
-                    player1.AddToBottom(p1card);
-                    player1.AddToBottom(p2card);
-                }
-                else
-                {
-                    // p2 wins, gets both cards, highest first.
-                    player2.AddToBottom(p2card);
-                    player2.AddToBottom(p1card);
-                }
-            }
-
-            var winner = (player1.Count > 0) ? player1 : player2;
-
-            int x = winner.Count;
-            long sum = 0;
-            while (winner.Count > 0)
-            {
-                int c = winner.PopTop();
-                sum += c * x;
-                x -= 1;
-            }
-
-            Console.WriteLine($"The final sum is {sum}");
+            //int winner = Part1Game.Part1GamePlay(player1, player2);
+            int winner = Part2Game.Part2GamePlay(player1, player2);
+            Console.WriteLine($"Well done Player {winner}");
         }
     }
 }
