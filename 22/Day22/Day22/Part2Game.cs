@@ -10,12 +10,23 @@ namespace Day22
         public static int Part2GamePlay(HandOfCards player1, HandOfCards player2)
         {
             List<(HandOfCards, HandOfCards)> previousHands = new List<(HandOfCards, HandOfCards)>();
+            return Part2GamePlay(player1, player2, 1, previousHands);
+        }
+
+        private static int Part2GamePlay(HandOfCards player1, HandOfCards player2, int level, List<(HandOfCards, HandOfCards)> previousHands)
+        {
 
             HandOfCards currentPlayer1 = player1;
             HandOfCards currentPlayer2 = player2;
 
+            int gamecount = 1;
+
             while (!seenBefore(currentPlayer1,currentPlayer2, previousHands))
             {
+
+                Console.WriteLine($"{level} == Game {gamecount}");
+                Console.WriteLine($"    Player 1 : {currentPlayer1.ToString()}");
+                Console.WriteLine($"    Player 2 : {currentPlayer2.ToString()}");
 
                 // First, make a not of the hands in our previous list.
                 previousHands.Add((currentPlayer1.Copy(), currentPlayer2.Copy()));
@@ -29,33 +40,16 @@ namespace Day22
                 int player1Top = currentPlayer1.PopTop();
                 int player2Top = currentPlayer2.PopTop();
 
+                // We are playing the sub game.
                 if (currentPlayer1.Count >= player1Top && currentPlayer2.Count >= player2Top) // we can sub game.
                 {
-                    // assumes different numbers of course.
-                    int high = player1Top > player2Top ? player1Top : player2Top;
-                    int low = high == player1Top ? player2Top : player1Top;
-
                     var play1subhand = new HandOfCards(currentPlayer1, player1Top);
                     var play2subhand = new HandOfCards(currentPlayer2, player2Top);
 
-                    int subwinner = Part1Game.Part1GamePlay(play1subhand, play2subhand);
+                    Console.WriteLine($"Going to a sub game to decide.");
+                    int subwinner = Part2Game.Part2GamePlay(play1subhand, play2subhand, level + 1, new List<(HandOfCards, HandOfCards)>()); // previousHands);
 
                     if (subwinner == 1)
-                    {
-                        currentPlayer1.AddToBottom(high);
-                        currentPlayer1.AddToBottom(low);
-                    }
-                    else
-                    {
-                        currentPlayer2.AddToBottom(high);
-                        currentPlayer2.AddToBottom(low);
-                    }
-
-                }
-                // If not, highest card wins, and we go round again.
-                else
-                {
-                    if (player1Top > player2Top)
                     {
                         currentPlayer1.AddToBottom(player1Top);
                         currentPlayer1.AddToBottom(player2Top);
@@ -65,18 +59,41 @@ namespace Day22
                         currentPlayer2.AddToBottom(player2Top);
                         currentPlayer2.AddToBottom(player1Top);
                     }
+
+                }
+                // If not, highest card wins, and we go round again.
+                else
+                {
+                    if (player1Top > player2Top)
+                    {
+                        Console.WriteLine($"Player 1 wins as {player1Top} > {player2Top}");
+                        currentPlayer1.AddToBottom(player1Top);
+                        currentPlayer1.AddToBottom(player2Top);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Player 2 wins as {player2Top} > {player1Top}");
+                        currentPlayer2.AddToBottom(player2Top);
+                        currentPlayer2.AddToBottom(player1Top);
+                    }
                 }
 
                 // go round again.
+                gamecount += 1;
             }
 
             if (currentPlayer1.Count > 0 && currentPlayer2.Count > 0)
-                return -1;
+            {
+                long partsum = Part1Game.ProduceWinningSum(currentPlayer1);
+                return 1; // throw new Exception("We are out of the loop but both have non-zero counts!") ;
+            }
 
-            int winner = currentPlayer1.Count == 0 ? 1 : 2;
+            int winner = currentPlayer1.Count == 0 ? 2 : 1;
             HandOfCards winnershand = currentPlayer1.Count == 0 ? currentPlayer2 : currentPlayer1;
 
             long finalsum = Part1Game.ProduceWinningSum(winnershand);
+
+            Console.WriteLine($"Part2 game {level} final sum is {finalsum}");
 
             return winner;
         }
@@ -95,5 +112,6 @@ namespace Day22
             }
             return false;
         }
+
     }
 }

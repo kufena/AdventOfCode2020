@@ -67,5 +67,13 @@ namespace Day22
             else
                 return false;
         }
+
+        public override string ToString()
+        {
+            if (cards.Count == 0) return "Empty";
+            string t = $"{cards[0]}";
+            for (int i = 1; i < cards.Count; i++) t += $", {cards[i]}";
+            return t;
+        }
     }
 }
