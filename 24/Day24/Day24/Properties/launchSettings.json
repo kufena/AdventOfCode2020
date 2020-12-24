@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Day24": {
+      "commandName": "Project",
+      "commandLineArgs": "e:/work/adventofcode/24/Day24/Day24/input.txt 100"
+    }
+  }
+}
